@@ -98,7 +98,7 @@ export const site: SiteConfig = {
 
 export const person: Person = {
   name: 'Zacharias Giakos',
-  jobTitle: '[PLATZHALTER] Berufsbezeichnung',
+  jobTitle: 'Arzt / Psychiater',
   claim: '[PLATZHALTER] Ein klarer Satz, der beschreibt, wofür diese Person steht.',
   intro:
     '[PLATZHALTER] Zwei bis drei Sätze zur Einführung: Für wen arbeitet die Person, welche Bereiche verbindet sie, und was macht ihre Arbeit besonders?',
@@ -108,7 +108,7 @@ export const person: Person = {
   ],
   location: '[PLATZHALTER] Ort / Region',
   contact: [
-    { label: 'E-Mail', href: 'mailto:kontakt@example.com', value: 'kontakt@example.com' },
+    { label: 'E-Mail', href: 'mailto:giakos@gmx.de', value: 'giakos@gmx.de' },
   ],
   social: [],
 };
@@ -207,13 +207,14 @@ export const testimonials: Testimonial[] = [];
 
 /** Rechtliche Angaben – vor dem Launch vollständig und geprüft ausfüllen. */
 export const legal = {
-  operatorName: 'Zacharias Giakos',
-  street: '[PLATZHALTER] Straße Hausnummer',
-  city: '[PLATZHALTER] PLZ Ort',
-  email: 'kontakt@example.com',
+  operatorName: 'Jörg Sticker',
+  street: 'Seilbahnweg 6',
+  city: '42785 Hahn',
+  email: 'giakos@gmx.de',
   phone: '',
   vatId: '',
-  professionalInfo: '',
+  professionalInfo:
+    '[PLATZHALTER] Pflichtangaben für Ärzte: zuständige Ärztekammer, gesetzliche Berufsbezeichnung „Arzt“ bzw. Facharztbezeichnung und der Staat, in dem sie verliehen wurde, sowie die geltende Berufsordnung (mit Link).',
 };
 
 export const sortedCompetencies = [...competencies].sort((a, b) => a.order - b.order);
