@@ -1,0 +1,93 @@
+---
+import { qualifications } from '../data/profile';
+---
+
+{
+  qualifications.length > 0 && (
+    <section id="qualifikationen" class="section section--alt slanted" aria-labelledby="qualifications-title">
+      <div class="container quals">
+        <div class="section-head reveal">
+          <span class="eyebrow">Qualifikationen</span>
+          <h2 id="qualifications-title">Ausbildung &amp; Zertifikate</h2>
+          <p>[PLATZHALTER] Nur belegbare Abschlüsse und Nachweise aufführen.</p>
+        </div>
+
+        <ol class="timeline">
+          {qualifications.map((q) => (
+            <li class="timeline__item reveal">
+              <span class="timeline__year">{q.year ?? ''}</span>
+              <div>
+                <h3>{q.title}</h3>
+                <p class="timeline__inst">{q.institution}</p>
+                {q.description && <p class="timeline__desc">{q.description}</p>}
+                {q.proofUrl && (
+                  <a href={q.proofUrl} target="_blank" rel="noopener noreferrer">
+                    Nachweis ansehen<span class="visually-hidden"> (öffnet in neuem Tab)</span>
+                  </a>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .quals {
+    display: grid;
+    gap: 1rem 4rem;
+  }
+  @media (min-width: 900px) {
+    .quals {
+      grid-template-columns: 0.8fr 1.2fr;
+      align-items: start;
+    }
+    .quals .section-head {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 3px solid var(--line);
+  }
+  .timeline__item {
+    position: relative;
+    display: grid;
+    gap: 0.25rem;
+    padding: 0 0 2.2rem 1.75rem;
+  }
+  .timeline__item:last-child {
+    padding-bottom: 0;
+  }
+  .timeline__item::before {
+    content: '';
+    position: absolute;
+    left: -7.5px;
+    top: 0.4rem;
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    transform: rotate(45deg);
+  }
+  .timeline__year {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--warm);
+    letter-spacing: 0.05em;
+  }
+  .timeline h3 {
+    margin-bottom: 0.2em;
+  }
+  .timeline__inst {
+    font-weight: 500;
+    margin-bottom: 0.4em;
+  }
+  .timeline__desc {
+    color: var(--text-muted);
+  }
+</style>

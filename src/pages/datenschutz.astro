@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { legal } from '../data/profile';
+---
+
+<BaseLayout title="Datenschutz" description="Datenschutzerklärung">
+  <section class="section">
+    <div class="container prose">
+      <p class="legal-warning" role="note">
+        <strong>Platzhalter – kein gültiger Rechtstext.</strong> Diese Gliederung zeigt nur, welche Punkte zu
+        behandeln sind. Vor der Veröffentlichung vollständig ausarbeiten und rechtlich prüfen lassen.
+      </p>
+      <h1>Datenschutzerklärung</h1>
+
+      <h2>1. Verantwortliche Stelle</h2>
+      <p>
+        {legal.operatorName}, {legal.street}, {legal.city}<br />
+        E-Mail: <a href={`mailto:${legal.email}`}>{legal.email}</a>
+      </p>
+
+      <h2>2. Hosting über GitHub Pages</h2>
+      <p>
+        [PLATZHALTER] Diese Website wird über GitHub Pages (GitHub Inc., USA) bereitgestellt. Beim Aufruf verarbeitet
+        GitHub technisch notwendige Daten wie die IP-Adresse. Angaben zu Rechtsgrundlage, Drittlandübermittlung und
+        Speicherdauer ergänzen.
+      </p>
+
+      <h2>3. Kontaktaufnahme per E-Mail</h2>
+      <p>[PLATZHALTER] Zweck, Rechtsgrundlage und Speicherdauer der Verarbeitung von Anfragen beschreiben.</p>
+
+      <h2>4. Schriftarten</h2>
+      <p>
+        Die verwendeten Schriftarten werden lokal von diesem Server ausgeliefert. Es findet keine Verbindung zu
+        externen Schriftarten-Diensten statt.
+      </p>
+
+      <h2>5. Cookies und Tracking</h2>
+      <p>Diese Website setzt keine Cookies und verwendet keine Analyse- oder Tracking-Dienste.</p>
+
+      <h2>6. Ihre Rechte</h2>
+      <p>[PLATZHALTER] Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit, Widerspruch, Beschwerderecht bei einer Aufsichtsbehörde.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal-warning {
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    background: var(--demo-bg);
+    color: var(--demo-text);
+    margin-bottom: 2rem;
+  }
+</style>

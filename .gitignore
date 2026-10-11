@@ -1,0 +1,28 @@
+# Build
+dist/
+.astro/
+
+# Abhängigkeiten
+node_modules/
+
+# Umgebung
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+
+# Editor / System
+.vscode/
+.idea/
+.DS_Store
+
+# Originalfotos gehören nicht ins öffentliche Repository
+fotos/
+*.heic
+*.zip
+
+# Fotos erst nach Freigabe ins (öffentliche) Repository aufnehmen:
+#   git add -f src/assets/images/foto_XX.webp
+src/assets/images/*
+!src/assets/images/.gitkeep

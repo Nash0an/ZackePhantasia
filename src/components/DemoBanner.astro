@@ -1,0 +1,31 @@
+---
+import { site } from '../data/profile';
+import { demoMode } from '../data/images';
+---
+
+{
+  (site.isDemo || demoMode) && (
+    <div class="demo-banner" role="note">
+      <strong>Demo-Version</strong>
+      <span>
+        Alle Inhalte mit [PLATZHALTER] sind Beispieltexte.
+        {demoMode && ' Lokaler Vorschaumodus: Es werden auch nicht freigegebene Bilder angezeigt.'}
+      </span>
+    </div>
+  )
+}
+
+<style>
+  .demo-banner {
+    background: var(--demo-bg);
+    color: var(--demo-text);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    padding: 0.55rem var(--gutter);
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 0.6rem;
+  }
+</style>

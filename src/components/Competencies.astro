@@ -1,0 +1,140 @@
+---
+import SmartImage from './SmartImage.astro';
+import { sortedCompetencies } from '../data/profile';
+import { getImage } from '../data/images';
+
+const areaImages = await Promise.all(sortedCompetencies.map((c) => getImage(c.imageId)));
+---
+
+<section id="bereiche" class="section" aria-labelledby="competencies-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Tätigkeitsbereiche</span>
+      <h2 id="competencies-title">Was ich anbiete</h2>
+      <p>[PLATZHALTER] Ein Satz, der die verschiedenen Bereiche verbindet.</p>
+    </div>
+
+    <ol class="areas" data-count={sortedCompetencies.length}>
+      {
+        sortedCompetencies.map((c, i) => {
+          const image = areaImages[i];
+          return (
+            <li class="area reveal" id={c.id}>
+              <div class="area__media">
+                <SmartImage image={image} sizes="(min-width: 1100px) 360px, (min-width: 700px) 45vw, 92vw" widths={[400, 720]} fallbackLabel={`Bereich ${i + 1}`} />
+                <span class="area__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              </div>
+              <div class="area__body">
+                {c.category && <span class="area__cat">{c.category}</span>}
+                <h3>{c.title}</h3>
+                <p>{c.summary}</p>
+                {c.details.length > 0 && (
+                  <ul class="area__list">
+                    {c.details.map((d) => <li>{d}</li>)}
+                  </ul>
+                )}
+              </div>
+            </li>
+          );
+        })
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .areas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 700px) {
+    .areas {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  /* 3 oder 5 Bereiche: drei Spalten; 4 Bereiche: 2 × 2 */
+  @media (min-width: 1100px) {
+    .areas:not([data-count='4']) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .areas[data-count='4'] .area__media {
+      aspect-ratio: 21 / 9;
+    }
+  }
+  .area {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .area:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+    border-color: var(--accent);
+  }
+  .area__media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+  .area__num {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 0.35rem 1.4rem 0.3rem 1rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
+  }
+  .area__media :global(.smart-img) {
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .area:hover .area__media :global(.smart-img) {
+    transform: scale(1.05);
+  }
+  .area__body {
+    padding: 1.4rem 1.5rem 1.6rem;
+  }
+  .area__body p {
+    color: var(--text-muted);
+  }
+  .area__cat {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--warm);
+  }
+  .area__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.95rem;
+  }
+  .area__list li {
+    position: relative;
+    padding-left: 1.2rem;
+  }
+  .area__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 0.5rem;
+    height: 3px;
+    background: var(--accent);
+    transform: skewX(-30deg);
+  }
+</style>

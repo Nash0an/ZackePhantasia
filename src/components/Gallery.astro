@@ -1,0 +1,51 @@
+---
+import SmartImage from './SmartImage.astro';
+import { getImages, imageSlots } from '../data/images';
+
+// Zeigt nur freigegebene Bilder; ohne Freigaben entfällt der Bildstreifen.
+const items = await getImages(imageSlots.gallery);
+---
+
+{
+  items.length > 0 && (
+    <section class="gallery" aria-label="Bildstreifen">
+      <ul class="gallery__track">
+        {items.map((img) => (
+          <li class="gallery__item">
+            <SmartImage image={img} sizes="(min-width: 900px) 380px, 75vw" widths={[400, 760]} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .gallery {
+    padding-block: 0 var(--section-space);
+  }
+  .gallery__track {
+    list-style: none;
+    margin: 0;
+    padding: 0 var(--gutter);
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(75vw, 380px);
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    padding-bottom: 0.75rem;
+  }
+  .gallery__item {
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius);
+    overflow: hidden;
+    scroll-snap-align: start;
+  }
+  @media (min-width: 1200px) {
+    .gallery__track {
+      padding-inline: max(var(--gutter), calc((100vw - var(--max)) / 2));
+    }
+  }
+</style>

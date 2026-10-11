@@ -1,0 +1,50 @@
+---
+import { person } from '../data/profile';
+import { url } from '../lib/url';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p>© {year} {person.name}</p>
+    <nav aria-label="Rechtliches">
+      <ul>
+        <li><a href={url('impressum/')}>Impressum</a></li>
+        <li><a href={url('datenschutz/')}>Datenschutz</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--line);
+    padding-block: 2rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+  .footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .footer p {
+    margin: 0;
+  }
+  .footer ul {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer a {
+    color: var(--text-muted);
+  }
+  .footer a:hover {
+    color: var(--text);
+  }
+</style>

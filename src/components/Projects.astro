@@ -1,0 +1,152 @@
+---
+import SmartImage from './SmartImage.astro';
+import { projects, competencies, publishedTestimonials } from '../data/profile';
+import { getImage } from '../data/images';
+
+const projectImages = await Promise.all(projects.map((p) => getImage(p.imageId)));
+const titleOf = (id: string) => competencies.find((c) => c.id === id)?.title ?? id;
+---
+
+{
+  projects.length > 0 && (
+    <section id="projekte" class="section" aria-labelledby="projects-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Projekte &amp; Referenzen</span>
+          <h2 id="projects-title">Ausgewählte Arbeiten</h2>
+          <p>[PLATZHALTER] Kurze Einleitung zu den Projekten.</p>
+        </div>
+
+        <div class="projects">
+          {projects.map((p, i) => {
+            const image = projectImages[i];
+            return (
+              <article class="project reveal">
+                {image && (
+                  <div class="project__media">
+                    <SmartImage image={image} sizes="(min-width: 900px) 540px, 92vw" widths={[480, 800]} />
+                  </div>
+                )}
+                <div class="project__body">
+                  <h3>{p.title}</h3>
+                  <dl class="project__facts">
+                    <div><dt>Ausgangslage</dt><dd>{p.problem}</dd></div>
+                    <div><dt>Rolle</dt><dd>{p.role}</dd></div>
+                    <div><dt>Vorgehen</dt><dd>{p.approach}</dd></div>
+                    <div><dt>Ergebnis</dt><dd>{p.result}</dd></div>
+                  </dl>
+                  {p.competencyIds.length > 0 && (
+                    <ul class="project__tags" aria-label="Zugehörige Bereiche">
+                      {p.competencyIds.map((id) => <li class="tag">{titleOf(id)}</li>)}
+                    </ul>
+                  )}
+                  {p.links && p.links.length > 0 && (
+                    <p class="project__links">
+                      {p.links.map((l) => (
+                        <a href={l.href} target="_blank" rel="noopener noreferrer">{l.label}</a>
+                      ))}
+                    </p>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        {publishedTestimonials.length > 0 && (
+          <div class="quotes">
+            {publishedTestimonials.map((t) => (
+              <figure class="quote reveal">
+                <blockquote>„{t.quote}“</blockquote>
+                <figcaption>
+                  {t.author}
+                  {t.context && <span> · {t.context}</span>}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .projects {
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 900px) {
+    .projects {
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+  }
+  .project {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .project__media {
+    aspect-ratio: 16 / 9;
+  }
+  .project__body {
+    padding: 1.5rem 1.6rem 1.7rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .project__facts {
+    margin: 0 0 1.25rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .project__facts dt {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-strong);
+  }
+  .project__facts dd {
+    margin: 0.1rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.97rem;
+  }
+  .project__tags {
+    list-style: none;
+    padding: 0;
+    margin: auto 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .project__links {
+    margin: 1rem 0 0;
+    display: flex;
+    gap: 1rem;
+  }
+  .quotes {
+    margin-top: 3rem;
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .quote {
+    margin: 0;
+    padding: 1.75rem;
+    border-radius: var(--radius-lg);
+    background: var(--accent-soft);
+  }
+  .quote blockquote {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+  }
+  .quote figcaption {
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+</style>

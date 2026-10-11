@@ -1,0 +1,195 @@
+---
+import { person, site } from '../data/profile';
+import { url } from '../lib/url';
+
+const home = url('');
+---
+
+<header class="header" data-header>
+  <div class="container header__inner">
+    <a class="header__brand" href={home}>{person.name}</a>
+
+    <button
+      class="header__toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-nav-toggle
+    >
+      <span class="visually-hidden">Menü öffnen</span>
+      <span class="header__burger" aria-hidden="true"></span>
+    </button>
+
+    <nav id="site-nav" class="header__nav" aria-label="Hauptnavigation" data-nav>
+      <ul>
+        {
+          site.nav.map((item) => (
+            <li>
+              <a href={`${home}${item.href}`}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+
+  function setOpen(open: boolean) {
+    if (!toggle || !header) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.querySelector('.visually-hidden')!.textContent = open ? 'Menü schließen' : 'Menü öffnen';
+    header.classList.toggle('is-open', open);
+  }
+
+  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  nav?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) setOpen(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && header?.classList.contains('is-open')) {
+      setOpen(false);
+      toggle?.focus();
+    }
+  });
+
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: saturate(1.4) blur(12px);
+    -webkit-backdrop-filter: saturate(1.4) blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .header.is-scrolled {
+    border-bottom-color: var(--line);
+  }
+  .header__inner {
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .header__brand {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+  .header__nav ul {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .header__nav a {
+    display: block;
+    padding: 0.5rem 0.8rem;
+    border-radius: 999px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .header__nav a:hover {
+    color: var(--accent-strong);
+  }
+  .header__toggle {
+    display: none;
+  }
+
+  @media (max-width: 860px) {
+    .header__toggle {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .header__burger,
+    .header__burger::before,
+    .header__burger::after {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: currentColor;
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.2s;
+    }
+    .header__burger {
+      position: relative;
+    }
+    .header__burger::before,
+    .header__burger::after {
+      content: '';
+      position: absolute;
+      left: 0;
+    }
+    .header__burger::before {
+      top: -6px;
+    }
+    .header__burger::after {
+      top: 6px;
+    }
+    .is-open .header__burger {
+      background: transparent;
+    }
+    .is-open .header__burger::before {
+      transform: translateY(6px) rotate(45deg);
+    }
+    .is-open .header__burger::after {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    .header__nav {
+      position: absolute;
+      top: var(--header-h);
+      left: 0;
+      right: 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      display: none;
+    }
+    .is-open .header__nav {
+      display: block;
+    }
+    .header__nav ul {
+      flex-direction: column;
+      padding: 0.75rem var(--gutter) 1.25rem;
+    }
+    .header__nav a {
+      padding: 0.85rem 0.5rem;
+      border-radius: 8px;
+      font-size: 1.05rem;
+    }
+  }
+</style>

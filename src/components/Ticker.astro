@@ -1,0 +1,80 @@
+---
+import { sortedCompetencies } from '../data/profile';
+
+// Laufband mit den Tätigkeitsbereichen. Rein dekorativ (die Bereiche stehen
+// darunter ausführlich), daher aria-hidden. Steht bei reduzierter Bewegung still.
+const items = sortedCompetencies.map((c) => c.title);
+---
+
+{
+  items.length > 0 && (
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__track">
+        {[0, 1].map(() => (
+          <ul>
+            {items.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .ticker {
+    position: relative;
+    z-index: 2;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    transform: rotate(-2deg);
+    margin: -1rem -2% 0;
+    padding-block: 0.9rem;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .ticker__track {
+    display: flex;
+    width: max-content;
+  }
+  .ticker ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .ticker li {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.1rem, 0.9rem + 1vw, 1.6rem);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    padding-inline: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+  }
+  .ticker li::after {
+    content: '';
+    width: 0.55em;
+    height: 0.55em;
+    background: currentColor;
+    transform: skewX(-20deg);
+    margin-left: 1.5rem;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ticker__track {
+      animation: ticker 32s linear infinite;
+    }
+    .ticker:hover .ticker__track {
+      animation-play-state: paused;
+    }
+    @keyframes ticker {
+      to {
+        transform: translateX(-50%);
+      }
+    }
+  }
+</style>

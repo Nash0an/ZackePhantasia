@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { legal } from '../data/profile';
+---
+
+<BaseLayout title="Impressum" description="Impressum">
+  <section class="section">
+    <div class="container prose">
+      <p class="legal-warning" role="note">
+        <strong>Platzhalter – kein gültiger Rechtstext.</strong> Vor der Veröffentlichung mit den echten Angaben des
+        Betreibers füllen und rechtlich prüfen lassen.
+      </p>
+      <h1>Impressum</h1>
+      <h2>Angaben gemäß § 5 DDG</h2>
+      <p>
+        {legal.operatorName}<br />
+        {legal.street}<br />
+        {legal.city}
+      </p>
+      <h2>Kontakt</h2>
+      <p>
+        E-Mail: <a href={`mailto:${legal.email}`}>{legal.email}</a>
+        {legal.phone && (<><br />Telefon: {legal.phone}</>)}
+      </p>
+      {legal.vatId && (<><h2>Umsatzsteuer-ID</h2><p>{legal.vatId}</p></>)}
+      {legal.professionalInfo && (<><h2>Berufsrechtliche Angaben</h2><p>{legal.professionalInfo}</p></>)}
+      <h2>Verantwortlich für den Inhalt</h2>
+      <p>{legal.operatorName}, Anschrift wie oben.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal-warning {
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    background: var(--demo-bg);
+    color: var(--demo-text);
+    margin-bottom: 2rem;
+  }
+</style>

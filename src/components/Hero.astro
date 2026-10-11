@@ -1,0 +1,252 @@
+---
+import SmartImage from './SmartImage.astro';
+import { person, sortedCompetencies } from '../data/profile';
+import { getImage, getImages, imageSlots, demoMode } from '../data/images';
+import { url } from '../lib/url';
+
+const portrait = await getImage(imageSlots.heroPortrait);
+// Bildauswahl nur im lokalen Demo-Modus
+const alternatives = demoMode ? await getImages(imageSlots.heroPortraitAlternatives) : [];
+const sizes = '(min-width: 900px) 460px, 88vw';
+const nameParts = person.name.trim().split(/\s+/);
+const lastName = nameParts.pop() ?? '';
+const firstName = nameParts.join(' ');
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <span class="eyebrow">{person.jobTitle}</span>
+      <h1 id="hero-title">
+        {firstName && <span class="hero__first">{firstName}</span>}
+        <span class="hero__last">{lastName}</span>
+      </h1>
+      <p class="hero__claim">{person.claim}</p>
+      <ul class="hero__areas" aria-label="Tätigkeitsbereiche">
+        {sortedCompetencies.map((c) => <li class="tag">{c.title}</li>)}
+      </ul>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href={url('#kontakt')}>Kontakt aufnehmen</a>
+        <a class="btn btn--ghost" href={url('#bereiche')}>Bereiche ansehen</a>
+      </div>
+    </div>
+
+    <div class="hero__media">
+      <div class="hero__visual">
+      <div class="hero__frame" data-hero-frame>
+        <div class="hero__layer is-active" data-layer={portrait?.id ?? 'fallback'}>
+          <SmartImage image={portrait} sizes={sizes} priority fallbackLabel="Porträt folgt" />
+        </div>
+        {
+          alternatives.map((img) => (
+            <div class="hero__layer" data-layer={img.id} hidden>
+              <SmartImage image={img} sizes={sizes} />
+            </div>
+          ))
+        }
+      </div>
+      <span class="hero__bar" aria-hidden="true"></span>
+      <span class="hero__stripes" aria-hidden="true"></span>
+      </div>
+
+      {
+        alternatives.length > 0 && portrait && (
+          <div class="demo-picker" role="group" aria-label="Demo: Porträt auswählen">
+            <span class="demo-picker__label">Demo · Porträt wählen</span>
+            <div class="demo-picker__buttons">
+              {[portrait, ...alternatives].map((img, i) => (
+                <button type="button" data-pick={img.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+                  {img.id.replace('foto_', '')}
+                </button>
+              ))}
+            </div>
+            <span class="demo-picker__hint">
+              Fest einstellen in <code>src/data/images.ts</code> → <code>heroPortrait</code>
+            </span>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-pick]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.pick;
+      document.querySelectorAll<HTMLElement>('[data-layer]').forEach((layer) => {
+        const active = layer.dataset.layer === id;
+        layer.hidden = !active;
+        layer.classList.toggle('is-active', active);
+      });
+      document
+        .querySelectorAll('[data-pick]')
+        .forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    });
+  });
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: clamp(2.5rem, 6vw, 5rem) clamp(4rem, 9vw, 7rem);
+    overflow: hidden;
+  }
+  /* großer, schräger Hintergrundbalken */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0 -10% 0 58%;
+    background: var(--bg-alt);
+    transform: skewX(-12deg);
+    transform-origin: top;
+    z-index: -1;
+  }
+  .hero__inner {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 4rem);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .hero__inner {
+      grid-template-columns: 1.2fr 0.8fr;
+    }
+  }
+  .hero h1 {
+    display: grid;
+    margin-bottom: 1.5rem;
+  }
+  .hero__first {
+    font-size: 0.55em;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+  }
+  .hero__last {
+    color: var(--text);
+    position: relative;
+    width: fit-content;
+  }
+  .hero__last::after {
+    content: '';
+    display: block;
+    height: 0.12em;
+    width: 55%;
+    margin-top: 0.08em;
+    background: var(--accent);
+    transform: skewX(-30deg);
+    transform-origin: left;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__last::after {
+      animation: grow 0.9s 0.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    @keyframes grow {
+      from {
+        width: 0;
+      }
+    }
+  }
+  .hero__claim {
+    font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+    color: var(--text-muted);
+    max-width: 34rem;
+    margin-bottom: 1.6rem;
+  }
+  .hero__areas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2.2rem;
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .hero__media {
+    position: relative;
+    width: min(100%, 460px);
+    justify-self: center;
+  }
+  .hero__visual {
+    position: relative;
+  }
+  .hero__frame {
+    position: relative;
+    z-index: 1;
+    aspect-ratio: 4 / 5;
+    clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%);
+    background: var(--surface);
+  }
+  .hero__layer {
+    position: absolute;
+    inset: 0;
+  }
+  .hero__layer[hidden] {
+    display: none;
+  }
+  .hero__bar {
+    position: absolute;
+    z-index: 0;
+    right: -6%;
+    bottom: -5%;
+    width: 46%;
+    height: 70%;
+    background: var(--accent);
+    clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
+  }
+  .hero__stripes {
+    position: absolute;
+    z-index: 2;
+    left: -4%;
+    top: 8%;
+    width: 64px;
+    height: 64px;
+    background: repeating-linear-gradient(-60deg, var(--accent) 0 4px, transparent 4px 12px);
+    opacity: 0.9;
+  }
+
+  .demo-picker {
+    position: relative;
+    z-index: 2;
+    margin-top: 2.5rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px dashed var(--demo-text);
+    border-radius: 8px;
+    background: var(--demo-bg);
+    color: var(--demo-text);
+    font-size: 0.8rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .demo-picker__label {
+    font-weight: 600;
+  }
+  .demo-picker__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .demo-picker button {
+    min-width: 2.5rem;
+    min-height: 2.25rem;
+    border-radius: 6px;
+    border: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .demo-picker button[aria-pressed='true'] {
+    background: var(--demo-text);
+    color: var(--demo-bg);
+  }
+  .demo-picker code {
+    font-size: 0.95em;
+  }
+</style>
